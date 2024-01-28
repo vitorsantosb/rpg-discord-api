@@ -1,0 +1,37 @@
+version: '3'
+services:
+  rpg-api:
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: node-20.10/rpg-api
+    ports:
+      - '${APP_PORT:-4000}:4000'
+    volumes:
+      - '.:/usr/src/rpg-api'
+    networks:
+      - rpg-api
+    depends_on:
+      - mongodb
+
+  mongodb:
+    volumes:
+      - 'rpg-mongo:/data/db'
+    image: mongo:latest
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: '${MONGODB_USERNAME:-mongo}'
+      MONGO_INITDB_ROOT_PASSWORD: '${MONGODB_PASSWORD:-mongo}'
+    ports:
+      - '27017:27017'
+    networks:
+      - rpg-api
+
+networks:
+  mevi:
+    driver: bridge
+volumes:
+  mevi-mongo:
+    driver: local
