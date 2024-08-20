@@ -1,9 +1,13 @@
-const {ExistsUserByEmail, StoreUser} = require('../../repository/user.repository');
+const {ExistsUserByEmail, StoreUser, GetUserDataWithEmail} = require('../../repository/user.repository');
 const {GetWebUrl} = require('../../service/webUrl.service');
 const {ValidateUserEmail} = require('../../service/user.service');
 const {UserDto} = require('../../repository/dto/user/user.dto');
 const {CreateId} = require('../../config/CreateUUID');
-const {CreateHashPassword} = require('../../security/encryption/encryption.utils');
+const {CreateHashPassword, VerifyHashPassword} = require('../../security/encryption/encryption.utils');
+const {CreateUserAccessToken} = require('../../security/auth/jwt');
+
+const userFunctions = require('/functions/functions');
+
 const userController = {
   create: async (req, res) => {
     const { username, password, email } = req.body;
@@ -49,8 +53,10 @@ const userController = {
     })
   },
   login: async (req, res) => {
-    const {email, password} = req.body;
-
-
+    await userFunctions.loginWithDiscord;
   }
 }
+
+module.exports = {
+  userController
+};
